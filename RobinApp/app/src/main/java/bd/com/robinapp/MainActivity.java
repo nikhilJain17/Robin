@@ -19,6 +19,8 @@ import java.net.URL;
 
     public class MainActivity extends AppCompatActivity {
 
+        private float x,y;
+
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -26,10 +28,11 @@ import java.net.URL;
 
             getAccelData();
 
-            SendDataTask task = new SendDataTask();
-            task.execute();
 
-        }
+
+
+        }// end of oncreate
+
 
         private void getAccelData() {
 
@@ -47,27 +50,31 @@ import java.net.URL;
                     tv.setText(Float.toString(sensorEvent.values[0])
                             + "\n" + Float.toString(sensorEvent.values[1])
                             + "\n" + Float.toString(sensorEvent.values[2]));
+
+                    x = sensorEvent.values[0];
+                    y = sensorEvent.values[1];
+
+                    // send to server
+                    new SendDataTask().execute();
+
                 }
 
                 @Override
                 public void onAccuracyChanged(Sensor sensor, int i) {
 
                 }
-            }, mSensor, 10000);
+            }, mSensor, 200000); // delay in microseconds
 
         }
 
-
-    }
-
-
     class SendDataTask extends AsyncTask<Void, Void, Void> {
-
 
 
         @Override
         protected Void doInBackground(Void... voids) {
 
+//            float x = floats[0];
+//            float y = floats[1];
 
             try {
                 URL url = new URL("http://7d58ba52.ngrok.io");
@@ -84,7 +91,8 @@ import java.net.URL;
 
                 PrintWriter out = new PrintWriter(connection.getOutputStream());
 
-                out.println("do you hear me?");
+                out.println("x: " + x);
+                out.println("y: " + y);
                 out.println("break"); // to tell it to stop reading here
 
                 out.flush();
@@ -111,7 +119,6 @@ import java.net.URL;
             return null;
         }
     }
-
-
+}
 
 
