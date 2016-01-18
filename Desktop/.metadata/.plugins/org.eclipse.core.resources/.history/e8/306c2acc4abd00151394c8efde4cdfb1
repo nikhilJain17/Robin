@@ -1,0 +1,10 @@
+/AckArgs.class
+/AuthPacket.class
+/Event.class
+/JacksonJsonSupport$AckArgsDeserializer.class
+/JacksonJsonSupport$ByteArraySerializer.class
+/JacksonJsonSupport$EventDeserializer.class
+/JacksonJsonSupport$EventKey.class
+/JacksonJsonSupport$ExBeanSerializerModifier.class
+/JacksonJsonSupport.class
+/JsonSupport.class

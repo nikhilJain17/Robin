@@ -1,0 +1,10 @@
+/AuthorizeHandler.class
+/ClientHead.class
+/ClientsBox.class
+/EncoderHandler.class
+/InPacketHandler.class
+/PacketListener.class
+/ResourceHandler.class
+/SocketIOException.class
+/SuccessAuthorizationListener.class
+/TransportState.class

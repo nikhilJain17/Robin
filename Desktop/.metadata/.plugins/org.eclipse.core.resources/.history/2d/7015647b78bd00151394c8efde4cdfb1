@@ -1,0 +1,53 @@
+import java.net.*;
+import java.io.*;
+
+public class Server {
+	
+	public static void main(String[] args) throws Exception {
+			
+		  ServerSocket serverSocket = new ServerSocket(1337);
+	      
+	        
+	      System.out.println("Server started on port " + serverSocket.getLocalPort());
+	      
+	      // forever young
+	      while (true) {
+		       
+	    	Socket clientSocket = null;
+		    try {
+		        clientSocket = serverSocket.accept();
+		    } catch (IOException e) {
+		        System.err.println("Accept failed.");
+		        System.exit(1);
+	        }
+	        
+	        System.out.println("Somebody connected");
+
+	        PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+	        BufferedReader in = new BufferedReader(
+	                new InputStreamReader(
+	                clientSocket.getInputStream()));
+	        
+	        String inputLine = "";
+	        
+	        // get the response
+	        while (!inputLine.equals(""))
+	        	inputLine = in.readLine();
+	        
+	        
+	        // output an ack and a response
+	        out.println("HTTP/1.0 200 OK");
+	        out.println("Content-Type: text/html");
+	        out.println("Server: Bot");
+	        out.println("whats up billa");
+	        out.flush();
+	        
+	        clientSocket.close();
+	        
+	    } // end of while
+	           
+	        
+	} // end of main
+	
+	
+}// end of class

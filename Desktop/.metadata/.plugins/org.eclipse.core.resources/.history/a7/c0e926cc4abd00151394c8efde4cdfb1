@@ -1,0 +1,6 @@
+/AckArgs.class
+/AuthPacket.class
+/Event.class
+/JacksonJsonSupport$AckArgsDeserializer.class
+/JacksonJsonSupport$ByteArraySerializer.class
+/JacksonJsonSupport$EventDeserializer.class
