@@ -1,9 +1,15 @@
 package bd.com.robinapp;
 
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -18,18 +24,50 @@ import java.net.URL;
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
 
+            getAccelData();
+
             SendDataTask task = new SendDataTask();
             task.execute();
 
         }
 
+        private void getAccelData() {
+
+            final TextView tv = (TextView) findViewById(R.id.latlng);
+
+            SensorManager mSensorManager;
+            Sensor mSensor;
+
+            mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+            mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+
+            mSensorManager.registerListener(new SensorEventListener() {
+                @Override
+                public void onSensorChanged(SensorEvent sensorEvent) {
+                    tv.setText(Float.toString(sensorEvent.values[0])
+                            + "\n" + Float.toString(sensorEvent.values[1])
+                            + "\n" + Float.toString(sensorEvent.values[2]));
+                }
+
+                @Override
+                public void onAccuracyChanged(Sensor sensor, int i) {
+
+                }
+            }, mSensor, 10000);
+
+        }
+
+
     }
+
 
     class SendDataTask extends AsyncTask<Void, Void, Void> {
 
 
+
         @Override
         protected Void doInBackground(Void... voids) {
+
 
             try {
                 URL url = new URL("http://7d58ba52.ngrok.io");
@@ -62,6 +100,8 @@ import java.net.URL;
 //                    inputLine += in.readLine();
 //
 //                Log.d("More Response", inputLine);
+
+                // send accelerometer data!
 
             }
             catch (Exception e) {
