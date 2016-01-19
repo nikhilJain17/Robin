@@ -10,9 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import org.json.JSONArray;
+
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -20,70 +22,31 @@ import java.net.URL;
     public class MainActivity extends AppCompatActivity {
 
         private float x,y;
-
-        Runnable sendRunnable;
+        private Socket mSocket;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
 
+            // connect the socket to the server
+            try {
+                mSocket = IO.socket("http://48ecd759.ngrok.io");
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            mSocket.connect();
+
+            // register the callback
             getAccelData();
 
-            sendRunnable = new Runnable() {
-                // send to server
-                @Override
-                public void run() {
 
-                    Log.d("Sending data", "Called");
-
-                    try {
-                        URL url = new URL("http://e8b3e82d.ngrok.io");
-
-                        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-                        // output an ack
-                        connection.setDoInput(true);
-                        connection.setDoOutput(true);
-                        connection.setRequestMethod("POST");
-                        connection.setRequestProperty("User-Agent", "ROBIN");
-                        connection.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-                        connection.setRequestProperty("Accept-Type", "text/html");
-                        connection.setRequestProperty("Content-Type", "text/html");
-
-                        PrintWriter out = new PrintWriter(connection.getOutputStream());
-
-                        out.write("x: " + x + "\n");
-                        out.write("y: " + y + "\n");
-                        out.write("break"); // to tell it to stop reading here
-
-                        out.flush();
-
-                        Log.d("Response", connection.getResponseMessage());
-
-//                BufferedReader in = new BufferedReader(connection.getInputStream());
-//
-//                String inputLine = " ";
-//
-//                // get the response
-//                while (!in.readLine().equals(null))
-//                    inputLine += in.readLine();
-//
-//                Log.d("More Response", inputLine);
-
-                        // send accelerometer data!
-
-                    }
-                    catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            };
+        }// end of oncreate
 
 
-
-            }// end of oncreate
+//        private void
 
 
         private void getAccelData() {
@@ -94,7 +57,7 @@ import java.net.URL;
             Sensor mSensor;
 
             mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-            mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+            mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
             mSensorManager.registerListener(new SensorEventListener() {
                 @Override
@@ -106,10 +69,15 @@ import java.net.URL;
                     x = sensorEvent.values[0];
                     y = sensorEvent.values[1];
 
-                    if (x > 2 || y > 2 || y < 2 || x < 2)
-                        new Thread(sendRunnable).start();
+                    if (x > 1 || x < -1 || y > 1 || y < -1) {
+                        try {
+                            mSocket.emit("mouse_move", x, y);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
 
-                }
+                }// end of onSensorChanged
 
                 @Override
                 public void onAccuracyChanged(Sensor sensor, int i) {

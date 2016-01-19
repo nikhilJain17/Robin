@@ -12,15 +12,28 @@ io.on("connection", function(socket) {
 
 	console.log('connected');
 
+	console.log("Screen: " + robot.getScreenSize().width + ", " + robot.getScreenSize().height);
+
 	// mouse move event
 	socket.on('mouse_move', function(x,y) {
 
+
 		var currentPos = robot.getMousePos();
 
-		var newX = currentPos.x + x;
-		var newY = currentPos.y + y;
+		var amplifier = -10;
 
-		robot.moveMouse(newX, newY);
+		var newX = Math.round(currentPos.x + (amplifier * x)); 
+		var newY = Math.round(currentPos.y + (amplifier * y));
+
+		console.log("\nSent through server: " + x + ", " + y);
+		console.log("\nCurrent coordinates: " + currentPos.x + ", " + currentPos.y);
+		console.log("New mouse coordinates: " + newX + ", " + newY);
+
+		// dont move past edge of screen
+		// if (newX < robot.getScreenSize().width && newY < robot.getScreenSize.height)
+			robot.moveMouseSmooth(newX, newY);
+		// else
+		// 	console.log("Too far");
 
 	});
 
