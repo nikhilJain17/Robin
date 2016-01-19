@@ -20,7 +20,8 @@ io.on("connection", function(socket) {
 
 		var currentPos = robot.getMousePos();
 
-		var amplifier = -8;
+		// CONTROLS SENSITIVITY
+		var amplifier = -10;
 
 		var newX = Math.round(currentPos.x + (amplifier * x)); 
 		var newY = Math.round(currentPos.y + (amplifier * y));

@@ -39,7 +39,7 @@ import java.net.URL;
         private Socket mSocket;
 
         private GestureDetector gestureDetector;
-        
+
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -126,7 +126,7 @@ import java.net.URL;
                     x = sensorEvent.values[0];
                     y = sensorEvent.values[1];
 
-                    if (x > 1 || x < -1 || y > 1 || y < -1) {
+                    if (x > 0.75 || x < -0.75 || y > 0.75 || y < -0.75) {
                         try {
                             mSocket.emit("mouse_move", x, y);
                         } catch (Exception e) {
