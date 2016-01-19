@@ -35,8 +35,9 @@ import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.Key;
 
-    public class MainActivity extends Activity implements GestureDetector.OnGestureListener, KeyEvent.Callback {
+public class MainActivity extends Activity implements GestureDetector.OnGestureListener, KeyEvent.Callback {
 
         private float x,y;
         private Socket mSocket;
@@ -188,6 +189,12 @@ import java.net.URL;
                 // emit a special case for space
                 if (keyCode == KeyEvent.KEYCODE_SPACE) {
                     mSocket.emit("key", -1, capslock);
+                    return true;
+                }
+
+                // emit a special case for backspace
+                else if (keyCode == KeyEvent.KEYCODE_DEL) {
+                    mSocket.emit("key", -2, capslock);
                     return true;
                 }
 

@@ -89,9 +89,12 @@ io.on("connection", function(socket) {
 		else
 			chr = String.fromCharCode(keyPressed + 36 + 32); // 32 is uppercase to lowercase offset
 
-		// handle special case space
+		// handle special case space, backspace
 		if (keyPressed == -1) {
 			chr = "space";
+		}
+		else if (keyPressed == -2) {
+			chr = "backspace";
 		}
 
 		console.log('Key Pressed: ' + chr);
