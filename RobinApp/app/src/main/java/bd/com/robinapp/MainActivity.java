@@ -1,6 +1,7 @@
 package bd.com.robinapp;
 
 import android.content.Context;
+import android.gesture.Gesture;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -9,6 +10,11 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
@@ -19,15 +25,27 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-    public class MainActivity extends AppCompatActivity {
+    public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
 
         private float x,y;
         private Socket mSocket;
+
+        private GestureDetector gestureDetector;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
+
+            // set up the scrolling thing
+            gestureDetector = new GestureDetector(this);
+            View.OnTouchListener onTouchListener = new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    return true;
+                }
+            };
+
 
             // connect the socket to the server
             try {
@@ -42,16 +60,32 @@ import java.net.URL;
             // register the callback
             getAccelData();
 
+            Button leftClick, rightClick;
+            leftClick = (Button) findViewById(R.id.leftClk);
+            rightClick = (Button) findViewById(R.id.rightClk);
+
+            leftClick.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mSocket.emit("left_click");
+                }
+            });
+
+            //TODO ADD A DRAG OPTION (BUTTON DOWN)
+
+            rightClick.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mSocket.emit("right_click");
+                }
+            });
+
+
+
 
         }// end of oncreate
 
-
-//        private void
-
-
         private void getAccelData() {
-
-            final TextView tv = (TextView) findViewById(R.id.latlng);
 
             SensorManager mSensorManager;
             Sensor mSensor;
@@ -62,9 +96,6 @@ import java.net.URL;
             mSensorManager.registerListener(new SensorEventListener() {
                 @Override
                 public void onSensorChanged(SensorEvent sensorEvent) {
-                    tv.setText(Float.toString(sensorEvent.values[0])
-                            + "\n" + Float.toString(sensorEvent.values[1])
-                            + "\n" + Float.toString(sensorEvent.values[2]));
 
                     x = sensorEvent.values[0];
                     y = sensorEvent.values[1];
@@ -88,62 +119,48 @@ import java.net.URL;
         }
 
 
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
 
-    class SendDataTask extends AsyncTask<Void, Void, Void> {
+            Log.d("Scroll", "Did scroll");
 
+            mSocket.emit("scroll", distanceY);
+
+            return true;
+        }
 
         @Override
-        protected Void doInBackground(Void... voids) {
-
-            Log.d("Called", "Asynctask");
-
-//            float x = floats[0];
-//            float y = floats[1];
-
-            try {
-                URL url = new URL("http://c8339227.ngrok.io");
-
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-                // output an ack
-                connection.setDoInput(true);
-                connection.setDoOutput(true);
-                connection.setRequestMethod("POST");
-                connection.setRequestProperty("User-Agent", "ROBIN");
-                connection.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-                connection.setRequestProperty("Accept-Type", "text/html");
-                connection.setRequestProperty("Content-Type", "text/html");
-
-                PrintWriter out = new PrintWriter(connection.getOutputStream());
-
-                out.write("x: " + x);
-                out.write("y: " + y);
-                out.write("break"); // to tell it to stop reading here
-
-                out.flush();
-
-                Log.d("Response", connection.getResponseMessage());
-
-//                BufferedReader in = new BufferedReader(connection.getInputStream());
-//
-//                String inputLine = " ";
-//
-//                // get the response
-//                while (!in.readLine().equals(null))
-//                    inputLine += in.readLine();
-//
-//                Log.d("More Response", inputLine);
-
-                // send accelerometer data!
-
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return null;
+        public boolean dispatchTouchEvent(MotionEvent event) {
+            gestureDetector.onTouchEvent(event);
+            return super.dispatchTouchEvent(event);
         }
+
+        @Override
+        public void onLongPress(MotionEvent motionEvent) {
+
+        }
+
+        @Override
+        public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+            return true;
+        }
+
+        // needed
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return true;
+        }
+
+        @Override
+        public void onShowPress(MotionEvent motionEvent) {
+
+        }
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent motionEvent) {
+            return true;
+        }
+
     }
-}
 
 

@@ -20,7 +20,7 @@ io.on("connection", function(socket) {
 
 		var currentPos = robot.getMousePos();
 
-		var amplifier = -10;
+		var amplifier = -8;
 
 		var newX = Math.round(currentPos.x + (amplifier * x)); 
 		var newY = Math.round(currentPos.y + (amplifier * y));
@@ -33,7 +33,38 @@ io.on("connection", function(socket) {
 		// if (newX < robot.getScreenSize().width && newY < robot.getScreenSize.height)
 			robot.moveMouseSmooth(newX, newY);
 		// else
-		// 	console.log("Too far");
+		// 	console.log("Too far")
+
+	});
+
+
+	// left click
+	socket.on('left_click', function() {
+		console.log('left click');
+		robot.mouseClick("left");
+	});
+
+
+	// right click
+	socket.on('right_click', function() {
+		console.log('right click');
+		robot.mouseClick("right");
+	})
+
+
+	// scroll
+	socket.on('scroll', function(scrollY) {
+
+		console.log('scroll');
+
+		var directionY;
+
+		if (scrollY < 0)
+			directionY = "down";
+		else
+			directionY = "up";
+
+		robot.scrollMouse(scrollY * 0.3, directionY);
 
 	});
 
