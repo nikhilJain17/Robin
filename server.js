@@ -30,8 +30,15 @@ io.on("connection", function(socket) {
 		console.log("\nCurrent coordinates: " + currentPos.x + ", " + currentPos.y);
 		console.log("New mouse coordinates: " + newX + ", " + newY);
 
+		// handle negatives
+		if (newX < 0)
+			newX = 0;
+
+		if (newY < 0)
+			newY = 0;
+
 		// dont move past edge of screen
-		// if (newX < robot.getScreenSize().width && newY < robot.getScreenSize.height)
+		// if (newX < robot.getScreenSize().width - 10 && newY < robot.getScreenSize().height - 10)
 			robot.moveMouseSmooth(newX, newY);
 		// else
 		// 	console.log("Too far")
