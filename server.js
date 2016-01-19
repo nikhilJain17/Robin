@@ -76,6 +76,29 @@ io.on("connection", function(socket) {
 
 	});
 
+	// keyboard
+	socket.on('key', function(keyPressed, isCapsLock) {
+
+		
+
+		var chr;
+		// convert to corresponding ascii depending on if capslock or not
+		if (isCapsLock)
+			chr = String.fromCharCode(keyPressed + 36); // 36 is offset from android codes to ascii
+		
+		else
+			chr = String.fromCharCode(keyPressed + 36 + 32); // 32 is uppercase to lowercase offset
+
+		// handle special case space
+		if (keyPressed == -1) {
+			chr = "space";
+		}
+
+		console.log('Key Pressed: ' + chr);
+		robot.keyTap(chr);
+
+	});
+
 });
 
 

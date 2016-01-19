@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MotionEvent;
@@ -35,7 +36,7 @@ import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-    public class MainActivity extends Activity implements GestureDetector.OnGestureListener {
+    public class MainActivity extends Activity implements GestureDetector.OnGestureListener, KeyEvent.Callback {
 
         private float x,y;
         private Socket mSocket;
@@ -169,6 +170,36 @@ import java.net.URL;
             return super.dispatchTouchEvent(event);
         }
 
+        // // TODO: 1/19/16  add shift, control, alt buttons as well
+        // TODO Ngrok it up!
+
+        @Override
+        public boolean onKeyUp(int keyCode, KeyEvent event) {
+
+            boolean capslock = false;
+
+            if (event.isCapsLockOn() || event.isShiftPressed())
+                capslock = true;
+
+
+            // do not emit the capslock, shift
+            if (!(keyCode == KeyEvent.KEYCODE_CAPS_LOCK) || !(event.isShiftPressed() )) {
+
+                // emit a special case for space
+                if (keyCode == KeyEvent.KEYCODE_SPACE) {
+                    mSocket.emit("key", -1, capslock);
+                    return true;
+                }
+
+                else
+                    mSocket.emit("key", keyCode, capslock);
+            }
+
+            return true;
+        } // end of onKeyUp
+
+
+            // NOT IMPLEMENTED
         @Override
         public void onLongPress(MotionEvent motionEvent) {
 
