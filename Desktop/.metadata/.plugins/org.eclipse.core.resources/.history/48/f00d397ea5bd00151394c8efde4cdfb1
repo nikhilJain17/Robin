@@ -6,46 +6,24 @@ import java.io.*;
 
 public class Server {
 	
-	 static class HandleInput implements Runnable {
-		 
-		  float x, y;
-		  
-		  public HandleInput(float x, float y) {
-			  this.x = x;
-			  this.y = y;
-		  }
-
-		@Override
-		public void run() {
-			try {
-				moveMouse(x, y);
-			} catch (AWTException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		 
-	 };
-	
 	public static void main(String[] args) throws Exception {
-		
-
-		  ServerSocket serverSocket = new ServerSocket(61474);
-		  System.out.println("Server started on localhost:" + serverSocket.getLocalPort());
-		  
-		    
+			
+		  ServerSocket serverSocket = new ServerSocket(0);
+		  Socket clientSocket = null;
+	        
+	      System.out.println("Server started on localhost:" + serverSocket.getLocalPort());
 	      
 	      // forever young
 	      while (true) {
-			  Socket clientSocket = null;
-
+		       
 		    try {
 		        clientSocket = serverSocket.accept();
 		    } catch (IOException e) {
 		        System.err.println("Accept failed.");
 		        System.exit(1);
 	        }
-	      
+	        
+	        System.out.println("Somebody connected");
 
 	        // outputter
 	        PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -54,31 +32,26 @@ public class Server {
 	        BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 	        String line;
 	        
-	        // reinit them
-			float getx = 0, gety = 0;
-
+	        float getx = 0, gety = 0;
+	        
 	        while ((line = in.readLine()) != null) {
 	        	
-//	        	System.out.println(line);
+	        	char first = line.charAt(0);
 	        	
 	        	// parse the line
 	        	if (line.equals("break"))
 	        		break;
 	        	else if (line.contains("x: ")) { //first == 'x') {
-	        		System.out.println("\n\nGot an X Value!\n\n");
-	        		getx = Float.parseFloat(line.substring(3));
+	        		getx = Integer.parseInt(line.substring(3));
 	        	}
 	        	else if (line.contains("y: ")) { //first == 'y') {
-	        		gety = Float.parseFloat(line.substring(3));
-	        		System.out.println("\n\nGot a Y Value!\n\n");
+	        		gety = Integer.parseInt(line.substring(3));
 	        	}
 	        	
-	        	// handle server input
-	        	Runnable r = new HandleInput(getx, gety);
-	        	new Thread(r).start();
+        		moveMouse(getx, gety);
 
 	        	
-	        	System.out.print(line + "\r\n");
+//	        	System.out.print(line + "\r\n");
 	        }
 	        
 	        // output an ack and a response
@@ -94,8 +67,6 @@ public class Server {
 	           
 	        
 	} // end of main
-	
-	
 	
 	private static void moveMouse(float x, float y) throws AWTException {
 		

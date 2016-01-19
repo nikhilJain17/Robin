@@ -6,38 +6,19 @@ import java.io.*;
 
 public class Server {
 	
-	 static class HandleInput implements Runnable {
-		 
-		  float x, y;
-		  
-		  public HandleInput(float x, float y) {
-			  this.x = x;
-			  this.y = y;
-		  }
-
-		@Override
-		public void run() {
-			try {
-				moveMouse(x, y);
-			} catch (AWTException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		 
-	 };
-	
 	public static void main(String[] args) throws Exception {
-		
-
+			
 		  ServerSocket serverSocket = new ServerSocket(61474);
 		  System.out.println("Server started on localhost:" + serverSocket.getLocalPort());
+
+		    
+		  Socket clientSocket = null;
 		  
 		    
 	      
 	      // forever young
 	      while (true) {
-			  Socket clientSocket = null;
+		
 
 		    try {
 		        clientSocket = serverSocket.accept();
@@ -54,9 +35,8 @@ public class Server {
 	        BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 	        String line;
 	        
-	        // reinit them
-			float getx = 0, gety = 0;
-
+	        float getx = 0, gety = 0;
+	        
 	        while ((line = in.readLine()) != null) {
 	        	
 //	        	System.out.println(line);
@@ -73,9 +53,7 @@ public class Server {
 	        		System.out.println("\n\nGot a Y Value!\n\n");
 	        	}
 	        	
-	        	// handle server input
-	        	Runnable r = new HandleInput(getx, gety);
-	        	new Thread(r).start();
+        		moveMouse(getx, gety);
 
 	        	
 	        	System.out.print(line + "\r\n");
@@ -94,8 +72,6 @@ public class Server {
 	           
 	        
 	} // end of main
-	
-	
 	
 	private static void moveMouse(float x, float y) throws AWTException {
 		

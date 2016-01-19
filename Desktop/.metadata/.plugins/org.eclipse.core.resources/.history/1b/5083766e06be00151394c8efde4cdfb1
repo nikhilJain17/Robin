@@ -6,11 +6,11 @@ import java.io.*;
 
 public class Server {
 	
-	 static class HandleInput implements Runnable {
+	 static class handleInput implements Runnable {
 		 
 		  float x, y;
 		  
-		  public HandleInput(float x, float y) {
+		  public handleInput(float x, float y) {
 			  this.x = x;
 			  this.y = y;
 		  }
@@ -74,7 +74,7 @@ public class Server {
 	        	}
 	        	
 	        	// handle server input
-	        	Runnable r = new HandleInput(getx, gety);
+	        	Runnable r = new handleInput(getx, gety);
 	        	new Thread(r).start();
 
 	        	

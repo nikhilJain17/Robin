@@ -21,6 +21,8 @@ import java.net.URL;
 
         private float x,y;
 
+        Runnable sendRunnable;
+
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -28,10 +30,60 @@ import java.net.URL;
 
             getAccelData();
 
+            sendRunnable = new Runnable() {
+                // send to server
+                @Override
+                public void run() {
+
+                    Log.d("Sending data", "Called");
+
+                    try {
+                        URL url = new URL("http://e8b3e82d.ngrok.io");
+
+                        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+                        // output an ack
+                        connection.setDoInput(true);
+                        connection.setDoOutput(true);
+                        connection.setRequestMethod("POST");
+                        connection.setRequestProperty("User-Agent", "ROBIN");
+                        connection.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+                        connection.setRequestProperty("Accept-Type", "text/html");
+                        connection.setRequestProperty("Content-Type", "text/html");
+
+                        PrintWriter out = new PrintWriter(connection.getOutputStream());
+
+                        out.write("x: " + x + "\n");
+                        out.write("y: " + y + "\n");
+                        out.write("break"); // to tell it to stop reading here
+
+                        out.flush();
+
+                        Log.d("Response", connection.getResponseMessage());
+
+//                BufferedReader in = new BufferedReader(connection.getInputStream());
+//
+//                String inputLine = " ";
+//
+//                // get the response
+//                while (!in.readLine().equals(null))
+//                    inputLine += in.readLine();
+//
+//                Log.d("More Response", inputLine);
+
+                        // send accelerometer data!
+
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            };
 
 
 
-        }// end of oncreate
+            }// end of oncreate
 
 
         private void getAccelData() {
@@ -54,8 +106,8 @@ import java.net.URL;
                     x = sensorEvent.values[0];
                     y = sensorEvent.values[1];
 
-                    // send to server
-                    new SendDataTask().execute();
+                    if (x > 2 || y > 2 || y < 2 || x < 2)
+                        new Thread(sendRunnable).start();
 
                 }
 
@@ -67,17 +119,21 @@ import java.net.URL;
 
         }
 
+
+
     class SendDataTask extends AsyncTask<Void, Void, Void> {
 
 
         @Override
         protected Void doInBackground(Void... voids) {
 
+            Log.d("Called", "Asynctask");
+
 //            float x = floats[0];
 //            float y = floats[1];
 
             try {
-                URL url = new URL("http://7d58ba52.ngrok.io");
+                URL url = new URL("http://c8339227.ngrok.io");
 
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
@@ -87,13 +143,14 @@ import java.net.URL;
                 connection.setRequestMethod("POST");
                 connection.setRequestProperty("User-Agent", "ROBIN");
                 connection.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+                connection.setRequestProperty("Accept-Type", "text/html");
                 connection.setRequestProperty("Content-Type", "text/html");
 
                 PrintWriter out = new PrintWriter(connection.getOutputStream());
 
-                out.println("x: " + x);
-                out.println("y: " + y);
-                out.println("break"); // to tell it to stop reading here
+                out.write("x: " + x);
+                out.write("y: " + y);
+                out.write("break"); // to tell it to stop reading here
 
                 out.flush();
 
