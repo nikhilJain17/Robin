@@ -8,26 +8,28 @@
 
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="110dp"
         android:layout_height="130dp"
         android:text="Left Click"
         android:id="@+id/leftClk" />
 
-    <ScrollView
-        android:id="@+id/scroll"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_alignBottom="@+id/rightClk" />
-
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="110dp"
         android:layout_height="130dp"
         android:text="Right Click"
         android:id="@+id/rightClk"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/keyboardBtn"
+        android:src="@drawable/keyboard"
+        android:layout_alignBottom="@+id/rightClk"
+        android:layout_toRightOf="@+id/leftClk"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/rightClk"/>
 
 </RelativeLayout>

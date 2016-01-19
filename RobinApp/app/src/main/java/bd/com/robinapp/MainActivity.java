@@ -1,5 +1,7 @@
 package bd.com.robinapp;
 
+import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Context;
 import android.gesture.Gesture;
 import android.hardware.Sensor;
@@ -11,9 +13,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import com.github.nkzawa.socketio.client.IO;
@@ -22,6 +29,7 @@ import com.github.nkzawa.socketio.client.Socket;
 import org.json.JSONArray;
 
 import java.io.PrintWriter;
+import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -31,11 +39,13 @@ import java.net.URL;
         private Socket mSocket;
 
         private GestureDetector gestureDetector;
-
+        
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
+
+//            showMenuButtons();
 
             // set up the scrolling thing
             gestureDetector = new GestureDetector(this);
@@ -80,6 +90,22 @@ import java.net.URL;
                 }
             });
 
+
+            // setup keyboard toggle stuff
+            ImageView toggleKeyBoard = (ImageView) findViewById(R.id.keyboardBtn);
+
+            toggleKeyBoard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                    if (inputMethodManager != null) {
+                        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                    }
+
+                }
+            });
 
 
 
@@ -160,6 +186,7 @@ import java.net.URL;
         public boolean onSingleTapUp(MotionEvent motionEvent) {
             return true;
         }
+
 
     }
 
