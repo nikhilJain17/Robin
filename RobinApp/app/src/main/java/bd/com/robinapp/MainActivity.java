@@ -23,6 +23,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
+
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
@@ -33,17 +35,20 @@ import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-    public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
+    public class MainActivity extends Activity implements GestureDetector.OnGestureListener {
 
         private float x,y;
         private Socket mSocket;
 
         private GestureDetector gestureDetector;
+        private ToggleButton lockMouseBtn;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
+
+            lockMouseBtn = (ToggleButton) findViewById(R.id.lockMouseBtn);
 
 //            showMenuButtons();
 
@@ -126,11 +131,14 @@ import java.net.URL;
                     x = sensorEvent.values[0];
                     y = sensorEvent.values[1];
 
-                    if (x > 0.75 || x < -0.75 || y > 0.75 || y < -0.75) {
-                        try {
-                            mSocket.emit("mouse_move", x, y);
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                    // if mouse is NOT locked
+                    if (!lockMouseBtn.isChecked()) {
+                        if (x > 0.75 || x < -0.75 || y > 0.75 || y < -0.75) {
+                            try {
+                                mSocket.emit("mouse_move", x, y);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
 

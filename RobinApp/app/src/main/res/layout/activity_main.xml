@@ -9,13 +9,13 @@
 
     <Button
         android:layout_width="110dp"
-        android:layout_height="130dp"
+        android:layout_height="160dp"
         android:text="Left Click"
         android:id="@+id/leftClk" />
 
     <Button
         android:layout_width="110dp"
-        android:layout_height="130dp"
+        android:layout_height="160dp"
         android:text="Right Click"
         android:id="@+id/rightClk"
         android:layout_alignParentTop="true"
@@ -27,9 +27,16 @@
         android:layout_height="60dp"
         android:id="@+id/keyboardBtn"
         android:src="@drawable/keyboard"
-        android:layout_alignBottom="@+id/rightClk"
-        android:layout_toRightOf="@+id/leftClk"
         android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/rightClk"/>
+        android:layout_centerHorizontal="true" />
+
+    <ToggleButton
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:textOff="Mouse Enabled"
+        android:textOn="Mouse Locked"
+        android:id="@+id/lockMouseBtn"
+        android:layout_alignBottom="@+id/leftClk"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
