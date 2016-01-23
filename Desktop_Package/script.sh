@@ -1,4 +1,9 @@
 #!/bin/sh
-echo "Hello, World!"
-./ngrok http 3000
+echo "Robn for Mac!"
+#open a new tab
+osascript -e 'tell application "Terminal" to activate' -e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down' -e 'tell application "Terminal" to do script "./ngrok http 4444" in selected tab of front window'
+#start the server on the old tab
 node server.js
+#start ngrok on the new tab
+# osascript -e 'tell application "Terminal" to activate' -e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down'
+# ./ngrok http 4444
