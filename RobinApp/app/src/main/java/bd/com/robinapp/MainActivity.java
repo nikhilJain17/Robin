@@ -115,6 +115,23 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
             });
 
 
+            final ToggleButton altBtn, ctrlBtn, shiftBtn;
+
+            altBtn = (ToggleButton) findViewById(R.id.altBtn);
+            ctrlBtn = (ToggleButton) findViewById(R.id.ctrlBtn);
+            shiftBtn = (ToggleButton) findViewById(R.id.altBtn);
+
+            altBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    if (altBtn.isChecked())
+                        mSocket.emit("alt", "yes");
+
+                }
+            });
+
+
 
         }// end of oncreate
 

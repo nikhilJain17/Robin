@@ -105,6 +105,6 @@ io.on("connection", function(socket) {
 });
 
 
-http.listen(8080, function() {
-	console.log("Listening on *8080");
+http.listen(4444, function() {
+	console.log("Listening on *4444");
 });
