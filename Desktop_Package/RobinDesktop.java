@@ -4,6 +4,8 @@
 
 import javax.swing.*;
 import java.awt.*;
+import java.lang.Process;
+import java.io.*;
 
 // @TODO: have user enter path!
 
@@ -34,11 +36,36 @@ public class RobinDesktop {
 		try {
 			Runtime runtime = Runtime.getRuntime();
 
-			// give permission to run
-			runtime.exec("chmod u+x /Users/nikhil/development/Robin/Desktop_Package/script.tool");
+			// get path
+			String path = System.getProperty("user.dir");
+			System.out.println("Current directory: " + path);
 
-			runtime.exec("/Users/nikhil/development/Robin/Desktop_Package/script.tool");
-			// System.out.println("Free memory: " + runtime.freeMemory());
+
+			// give permission to run
+			String chmodCommand = "chmod u+x " + path + "/script.tool";
+			runtime.exec(chmodCommand);
+
+			// run it
+			String runCommand = path + "/script.tool";
+			Process tunneling = runtime.exec(runCommand);
+
+
+			// get output, look for ngrok url, output that cheese to the usr
+			InputStream in = tunneling.getInputStream();
+
+			String sb = " ";
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			String read;
+
+			while((read = br.readLine()) != null) {
+			    //System.out.println(read);
+			    sb += read + "\n";   
+			}
+
+			br.close();
+			System.out.println("Output: " + sb);
+
+
 		}
 		catch (Exception e) {
 			e.printStackTrace();
