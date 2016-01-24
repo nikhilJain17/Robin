@@ -5,6 +5,7 @@
 import javax.swing.*;
 import java.awt.*;
 
+// @TODO: have user enter path!
 
 public class RobinDesktop {
 	
@@ -32,11 +33,16 @@ public class RobinDesktop {
 
 		try {
 			Runtime runtime = Runtime.getRuntime();
+
+			// give permission to run
+			runtime.exec("chmod u+x /Users/nikhil/development/Robin/Desktop_Package/script.tool");
+
 			runtime.exec("/Users/nikhil/development/Robin/Desktop_Package/script.tool");
 			// System.out.println("Free memory: " + runtime.freeMemory());
 		}
 		catch (Exception e) {
 			e.printStackTrace();
+			textfield.setText("Check your path and try again!");
 		}
 
 	}
