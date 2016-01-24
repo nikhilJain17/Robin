@@ -2,6 +2,15 @@ var robot = require("robotjs"); // mouse mover, screen interacter
 var app = require("express")();
 var http = require("http").Server(app);
 var io = require("socket.io")(http);
+var localtunnel = require('localtunnel');
+
+var PORT = 4444;
+
+var tunnel = localtunnel(PORT, function(err, tunnel) {
+	console.log("Tunnel URL: " + tunnel.url);
+});
+
+
 
 app.get('/', function (req, res) {
 	res.send("I hear you");
