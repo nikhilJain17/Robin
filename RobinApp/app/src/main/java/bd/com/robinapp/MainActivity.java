@@ -66,7 +66,7 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
 
             // connect the socket to the server
             try {
-                mSocket = IO.socket("http://47da2053.ngrok.io");
+                mSocket = IO.socket("https://wdcqzybpyi.localtunnel.me");
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -188,13 +188,19 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
             return super.dispatchTouchEvent(event);
         }
 
-        // // TODO: 1/19/16  add shift, control, alt buttons as well
-        // TODO Ngrok it up!
-
         @Override
         public boolean onKeyUp(int keyCode, KeyEvent event) {
 
             boolean capslock = false;
+
+//            final char[] alphabet = new char[] {
+//               'A', 'a', 'B', 'b', 'C',
+//            } ;
+
+            int code = event.getUnicodeChar();
+            String pressed = Character.toString((char) code);
+
+            Log.d("Pressed: ", pressed);
 
             if (event.isCapsLockOn() || event.isShiftPressed())
                 capslock = true;

@@ -23,6 +23,11 @@ io.on("connection", function(socket) {
 
 	console.log("Screen: " + robot.getScreenSize().width + ", " + robot.getScreenSize().height);
 
+	socket.on('error', function() {
+		console.log("error!");
+		return;
+	});
+
 	// mouse move event
 	socket.on('mouse_move', function(x,y) {
 
