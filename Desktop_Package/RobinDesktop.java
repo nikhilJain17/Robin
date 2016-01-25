@@ -6,8 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.lang.Process;
 import java.io.*;
+import java.net.*;
 
-// @TODO: have user enter path!
 
 public class RobinDesktop {
 	
@@ -74,10 +74,48 @@ public class RobinDesktop {
 
 	}
 
+	// listen for javascript code to tell java app what the url is
+	private void getURL() {
+		
+		final int PORT = 4445; // node server runs on 4444
+
+		try {
+		    
+		    ServerSocket serverSocket = new ServerSocket(PORT);
+		    
+		    Socket clientSocket = serverSocket.accept();
+		    
+		    PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+		    
+		    BufferedReader in = new BufferedReader(
+		        new InputStreamReader(clientSocket.getInputStream()));
+
+		    // read the stuff
+		    String inputLine, outputLine = "";
+
+		    while ((inputLine = in.readLine()) != null) {
+		        
+		        // out.println(inputLine);
+		        outputLine += inputLine;
+		        if (outputLine.equals("Bye."))
+		            break;
+		    } // end of while
+
+		    System.out.println("URL: " + outputLine);
+
+		} 
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+
+	} // end of getURL()
+
 	public static void main(String[] args) {
 
-		RobinDesktop desktop = new RobinDesktop();
 		System.out.println("Hello World");
+		
+		RobinDesktop desktop = new RobinDesktop();
+		desktop.getURL();
 
 	} // end of main
 

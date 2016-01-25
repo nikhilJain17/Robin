@@ -3,11 +3,17 @@ var app = require("express")();
 var http = require("http").Server(app);
 var io = require("socket.io")(http);
 var localtunnel = require('localtunnel');
+// var ajax = require('ajax');
+var fs = require('fs'); // for writing url to file
 
 var PORT = 4444;
 
 var tunnel = localtunnel(PORT, function(err, tunnel) {
 	console.log("Tunnel URL: " + tunnel.url);
+
+	// write the URL to a text file
+    fs.writeFile("url.txt", tunnel.url, function(err) {});
+
 });
 
 
@@ -55,7 +61,7 @@ io.on("connection", function(socket) {
 		// if (newX < robot.getScreenSize().width - 10 && newY < robot.getScreenSize().height - 10)
 			robot.moveMouseSmooth(newX, newY);
 		// else
-		// 	console.log("Too far")
+		//	console.log("Too far")
 
 	});
 
